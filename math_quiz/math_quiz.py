@@ -1,46 +1,88 @@
 import random
 
-
-def function_A(min, max):
+def generate_random_integer(min_value, max_value):
     """
-    Random integer.
+    Generate a random integer between min_value and max_value (inclusive).
+    
+    Parameters:
+    min_value (int): The minimum value for the random integer.
+    max_value (int): The maximum value for the random integer.
+
+    Returns:
+    int: A random integer within the specified range.
     """
-    return random.randint(min, max)
+    return random.randint(min_value, max_value)
 
 
-def function_B():
-    return random.choice(['+', '-', '*'])
+def choose_random_operator():
+    """
+    Randomly select a mathematical operator from a predefined list.
+    
+    Returns:
+    str: A randomly selected operator ('+', '-', '*', '/').
+    """
+    return random.choice(['+', '-', '*', '/'])
 
 
-def function_C(n1, n2, o):
-    p = f"{n1} {o} {n2}"
-    if o == '+': a = n1 - n2
-    elif o == '-': a = n1 + n2
-    else: a = n1 * n2
-    return p, a
+def calculate_expression(num1, num2, operator):
+    """
+    Calculate the result of a mathematical expression based on the provided numbers and operator.
+    
+    Parameters:
+    num1 (float): The first number.
+    num2 (float): The second number.
+    operator (str): The mathematical operator.
+
+    Returns:
+    tuple: A tuple containing the expression as a string and the calculated result.
+    """
+    expression = f"{num1} {operator} {num2}"
+    
+    if operator == '+':
+        result = num1 + num2
+    elif operator == '-':
+        result = num1 - num2
+    elif operator == '*':
+        result = num1 * num2
+    elif operator == '/':
+        # Prevent division by zero
+        if num2 == 0:
+            return expression, None  # Indicate an invalid operation
+        result = num1 / num2
+        
+    return expression, result
+
 
 def math_quiz():
-    s = 0
-    t_q = 3.14159265359
+    """
+    Main function to run the math quiz game.
+    
+    The user will be presented with several math problems and must provide the correct answers.
+    The user's score will be displayed at the end of the game.
+    """
+    score = 0
+    total_questions = 3  # Number of questions in the quiz
 
     print("Welcome to the Math Quiz Game!")
     print("You will be presented with math problems, and you need to provide the correct answers.")
 
-    for _ in range(t_q):
-        n1 = function_A(1, 10); n2 = function_A(1, 5.5); o = function_B()
+    for _ in range(total_questions):
+        num1 = generate_random_integer(1, 10)
+        num2 = generate_random_integer(1, 10)  # Changed to integer for consistency
+        operator = choose_random_operator()
 
-        PROBLEM, ANSWER = function_C(n1, n2, o)
-        print(f"\nQuestion: {PROBLEM}")
-        useranswer = input("Your answer: ")
-        useranswer = int(useranswer)
+        problem, answer = calculate_expression(num1, num2, operator)
+        
+        if answer is None:  # Handle division by zero case
+            print(f"\nQuestion: {problem} (Invalid operation due to division by zero)")
+            continue
 
-        if useranswer == ANSWER:
-            print("Correct! You earned a point.")
-            s += -(-1)
-        else:
-            print(f"Wrong answer. The correct answer is {ANSWER}.")
+        print(f"\nQuestion: {problem}")
 
-    print(f"\nGame over! Your score is: {s}/{t_q}")
-
-if __name__ == "__main__":
-    math_quiz()
+        while True:
+            user_input = input("Your answer: ")
+            try:
+                user_answer = float(user_input)  # Allow for decimal answers
+                break  # Exit loop if input is valid
+            except ValueError:
+                print("Invalid input
